@@ -1,0 +1,36 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+DTSTART:20200625T210000Z
+DTEND:20200625T213000Z
+DTSTAMP:20200623T235605Z
+ORGANIZER;CN=swidup@hawaii.edu:mailto:swidup@hawaii.edu
+UID:6ifidtrlhcmb9var0att0kjme0@google.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=sbirns@hawaii.edu;X-NUM-GUESTS=0:mailto:sbirns@hawaii.edu
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE
+ ;CN=swidup@hawaii.edu;X-NUM-GUESTS=0:mailto:swidup@hawaii.edu
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=jaweber@hawaii.edu;X-NUM-GUESTS=0:mailto:jaweber@hawaii.edu
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=timoteos@hawaii.edu;X-NUM-GUESTS=0:mailto:timoteos@hawaii.edu
+X-MICROSOFT-CDO-OWNERAPPTID:1747996675
+CREATED:20200622T213205Z
+DESCRIPTION:-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~
+ :~:~:~:~:~:~:~:~::~:~::-\nPlease do not edit this section of the descriptio
+ n.\n\nView your event at https://www.google.com/calendar/event?action=VIEW&
+ eid=NmlmaWR0cmxoY21iOXZhcjBhdHQwa2ptZTAgamF3ZWJlckBoYXdhaWkuZWR1&tok=MTcjc3
+ dpZHVwQGhhd2FpaS5lZHU3MDg2YmFlNjJkOTliMjRjOGIzODA5MDk3ZTljN2Y3MGJkODQzODVm&
+ ctz=Pacific%2FHonolulu&hl=en&es=1.\n-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~
+ :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-
+LAST-MODIFIED:20200623T235603Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Sam & Tim pick up monitors
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
