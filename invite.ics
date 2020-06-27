@@ -7,16 +7,16 @@ BEGIN:VEVENT
 DTSTART:20200625T210000Z
 DTEND:20200625T213000Z
 DTSTAMP:20200623T235605Z
-ORGANIZER;CN=swidup@hawaii.edu:mailto:swidup@hawaii.edu
+ORGANIZER;CN=nmogire@hawaii.edu:mailto:nmogire@hawaii.edu
 UID:6ifidtrlhcmb9var0att0kjme0@google.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
- TRUE;CN=sbirns@hawaii.edu;X-NUM-GUESTS=0:mailto:sbirns@hawaii.edu
+ TRUE;CN=jatinp@hawaii.edu;X-NUM-GUESTS=0:mailto:jatinp@hawaii.edu
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE
- ;CN=swidup@hawaii.edu;X-NUM-GUESTS=0:mailto:swidup@hawaii.edu
+ ;CN=nmogire@hawaii.edu;X-NUM-GUESTS=0:mailto:nmogire@hawaii.edu
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
  TRUE;CN=jaweber@hawaii.edu;X-NUM-GUESTS=0:mailto:jaweber@hawaii.edu
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
- TRUE;CN=timoteos@hawaii.edu;X-NUM-GUESTS=0:mailto:timoteos@hawaii.edu
+ TRUE;CN=auernhei@hawaii.edu;X-NUM-GUESTS=0:mailto:auernhei@hawaii.edu
 X-MICROSOFT-CDO-OWNERAPPTID:1747996675
 CREATED:20200622T213205Z
 DESCRIPTION:-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~
@@ -30,7 +30,7 @@ LAST-MODIFIED:20200623T235603Z
 LOCATION:
 SEQUENCE:0
 STATUS:CONFIRMED
-SUMMARY:Sam & Tim pick up monitors
+SUMMARY:Testing .ics format for Google Calendar invite
 TRANSP:OPAQUE
 END:VEVENT
 END:VCALENDAR
