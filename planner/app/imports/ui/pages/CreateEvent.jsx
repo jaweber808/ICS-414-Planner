@@ -3,7 +3,6 @@ import { Events, EventSchema } from '/imports/api/event/event';
 import { Grid, Segment, Header } from 'semantic-ui-react';
 import AutoForm from 'uniforms-semantic/AutoForm';
 import TextField from 'uniforms-semantic/TextField';
-import NumField from 'uniforms-semantic/NumField';
 import DateField from 'uniforms-semantic/DateField';
 import SelectField from 'uniforms-semantic/SelectField';
 import BoolField from 'uniforms-semantic/BoolField';
@@ -36,10 +35,10 @@ class CreateEvent extends React.Component {
 
   /** On submit, insert the data. */
   submit(data) {
-    const { title, location, startDate, startTime, endDate, endTime, latitude, longitude, priority, 
-      classification, version, repeat, numOfEvents, description, resources, guests } = data;
+    const { title, location, startDate, startTime, endDate, endTime, latitude, longitude, priority, classification,
+      version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
-    Events.insert({ title, location, startDate, startTime, endDate, endTime, latitude, longitude, priority, 
+    Events.insert({ title, location, startDate, startTime, endDate, endTime, latitude, longitude, priority,
       classification, version, repeat, numOfEvents, description, resources, owner, guests }, this.insertCallback);
   }
 
@@ -62,10 +61,10 @@ class CreateEvent extends React.Component {
                 <TextField name='guests'/>
                 <HiddenField name='latitude'/>
                 <HiddenField name='longitude'/>
-                <HiddenField name='priority'/>
-                <HiddenField name='classification'/>
-                <HiddenField name='version'/>
-                <HiddenField name='resources'/>
+                <SelectField name='priority'/>
+                <SelectField name='classification'/>
+                <SelectField name='version'/>
+                <TextField name='resources'/>
                 <HiddenField name='owner'/>
                 <SubmitField value='Submit'/>
                 <ErrorsField/>
