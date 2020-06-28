@@ -32,13 +32,50 @@ class CreateEvent extends React.Component {
       this.formRef.reset();
     }
   }
+  
+  longitudePosition(position) {
+    return position.coords.longitude;
+  }
+
+  latitudePosition(position) {
+    return position.coords.latitude;
+  }
+
+  createDTSTAMP (date) {
+    let dt = `${date.getFullYear()}`;
+    dt = dt.concat(("0" + (date.getMonth() + 1)).slice(-2));
+    dt = dt.concat(("0" + date.getDate()).slice(-2));
+    dt = dt.concat("T");
+    dt = dt.concat(("0" + date.getHours()).slice(-2));
+    dt = dt.concat(("0" + date.getMinutes()).slice(-2));
+    dt = dt.concat("00");
+    return dt;
+  }
 
   /** On submit, insert the data. */
   submit(data) {
-    const { title, location, startDate, startTime, endDate, endTime, latitude, longitude, priority, classification,
+    const { title, location, startDate, endDate, priority, classification,
       version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
-    Events.insert({ title, location, startDate, startTime, endDate, endTime, latitude, longitude, priority,
+    const longitude = navigator.geolocation.getCurrentPosition(this.longitudePosition);
+    const latitude = navigator.geolocation.getCurrentPosition(this.latitudePosition);
+
+    let eventFile = `DTSTAMP:${this.createDTSTAMP(new Date())}\r\n`;
+    eventFile = eventFile.concat(`UID:placeholder\r\n`);
+    eventFile = eventFile.concat(`LOCATION:\r\n`);
+    eventFile = eventFile.concat(`CLASS:\r\n`);
+    eventFile = eventFile.concat(`SUMMARY:\r\n`);
+    eventFile = eventFile.concat(`TZID:\r\n`);
+    eventFile = eventFile.concat(`DTSTART: `);
+    eventFile = eventFile.concat(`ATTENDEE:\r\n`);
+    eventFile = eventFile.concat(`DTEND: `);
+    eventFile = eventFile.concat(`PRIORITY:\r\n`);
+    eventFile = eventFile.concat(`DESCRIPTION:\r\n`);
+    eventFile = eventFile.concat(`RESOURCES:\r\n`);
+
+    console.log(`BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`);
+
+    Events.insert({ title, location, startDate, endDate, latitude, longitude, priority,
       classification, version, repeat, numOfEvents, description, resources, owner, guests }, this.insertCallback);
   }
 
@@ -51,22 +88,21 @@ class CreateEvent extends React.Component {
             <AutoForm ref={(ref) => { this.formRef = ref; }} schema={EventSchema} onSubmit={this.submit}>
               <Segment>
                 <TextField name='title'/>
+                <TextField name='guests'/>
                 <TextField name='location'/>
                 <DateField name='startDate'/>
-                <TextField name='startTime'/>
                 <DateField name='endDate'/>
-                <TextField name='endTime'/>
                 <TextField name='description'/>
                 <BoolField name='repeat'/>
-                <TextField name='guests'/>
-                <HiddenField name='latitude'/>
-                <HiddenField name='longitude'/>
                 <SelectField name='priority'/>
                 <SelectField name='classification'/>
                 <SelectField name='version'/>
                 <TextField name='resources'/>
-                <HiddenField name='owner'/>
                 <SubmitField value='Submit'/>
+
+                <HiddenField name='latitude'/>
+                <HiddenField name='longitude'/>
+                <HiddenField name='owner'/>
                 <ErrorsField/>
               </Segment>
             </AutoForm>

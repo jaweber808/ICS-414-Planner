@@ -10,9 +10,7 @@ const EventSchema = new SimpleSchema({
   title: String,
   location: String,
   startDate: Date,
-  startTime: Date,
   endDate: Date,
-  endTime: Date,
   latitude: Number,
   longitude: Number,
   priority: {
@@ -22,7 +20,7 @@ const EventSchema = new SimpleSchema({
   },
   classification: {
     type: String,
-    allowedValues: ['PUBLIC', 'PRIVATE'],
+    allowedValues: ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
     defaultValue: 'PUBLIC',
   },
   version: {
