@@ -30,7 +30,7 @@ const EventSchema = new SimpleSchema({
     allowedValues: [1.0, 2.0],
     defaultValue: 1.0,
   },
-  Repeat: {
+  repeat: {
     type: String,
     allowedValues: ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'],
     defaultValue: 'NONE',
