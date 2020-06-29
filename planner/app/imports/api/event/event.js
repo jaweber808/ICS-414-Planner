@@ -11,8 +11,7 @@ const EventSchema = new SimpleSchema({
   location: String,
   startDate: Date,
   endDate: Date,
-  latitude: Number,
-  longitude: Number,
+  geoLocal: String,
   priority: {
     type: Number,
     allowedValues: [0, 9, 1],

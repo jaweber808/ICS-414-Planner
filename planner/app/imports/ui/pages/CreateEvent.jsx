@@ -38,7 +38,8 @@ class CreateEvent extends React.Component {
     this.insertCallback = this.insertCallback.bind(this);
     this.formRef = null;
     this.state = {
-      repeatOption: false
+      repeatOption: false,
+      geoLocal: '',
     }
   }
 
@@ -50,14 +51,6 @@ class CreateEvent extends React.Component {
       Bert.alert({ type: 'success', message: 'Add succeeded' });
       this.formRef.reset();
     }
-  }
-  
-  longitudePosition(position) {
-    return position.coords.longitude;
-  }
-
-  latitudePosition(position) {
-    return position.coords.latitude;
   }
 
   createDTSTAMP (date) {
@@ -71,30 +64,164 @@ class CreateEvent extends React.Component {
     return dt;
   }
 
+  createTZid (time){
+    let tzos= time.getTimezoneOffset();
+    let timezone = '';
+    switch (tzos){
+      case 720:
+        timezone = 'Pacific/Kiritimati';
+        break;
+      case 660:
+        timezone = 'Etc/GMT+11';
+        break;
+      case 600:
+        timezone = 'Pacific/Honolulu';
+        break;
+      case 570:
+        timezone = 'Pacific/Marquesas';
+        break;
+      case 540:
+        timezone = 'America/Alaska';
+        break;
+      case 480:
+        timezone = 'America/Los_Angeles';
+        break;
+      case 420:
+        timezone = 'America/Phoenix';
+        break;
+      case 360:
+        timezone = 'America/Guatemala';
+        break;
+      case 300:
+        timezone = 'America/Cancun';
+        break;
+      case 240:
+        timezone = 'America/Halifax';
+        break;
+      case 210:
+        timezone = 'America/St_Johns';
+        break;
+      case 180:
+        timezone = 'America/Araguaina';
+        break;
+      case 120:
+        timezone = 'Etc/GMT+2';
+        break;
+      case 60:
+        timezone = 'Atlantic/Azores';
+        break;
+      case 0:
+        timezone = 'Africa/Abidjan';
+        break;
+      case -60:
+        timezone = 'Europe/Berlin';
+        break;
+      case -120:
+        timezone = 'Asia/Amman';
+        break;
+      case -180:
+        timezone = 'Europe/Istanbul';
+        break;
+      case -210:
+        timezone = 'Asia/Tehran';
+        break;
+      case -240:
+        timezone = 'Asia/Dubai';
+        break;
+      case -270:
+        timezone = 'Asia/Kabul';
+        break;
+      case -300:
+        timezone = 'Asia/Tashkent';
+        break;
+      case -330:
+        timezone = 'Asia/Colombo';
+        break;
+      case -345:
+        timezone = 'Asia/Katmandu';
+        break;
+      case -360:
+        timezone = 'Asia/Almaty';
+        break;
+      case -390:
+        timezone = 'Asia/Rangoon';
+        break;
+      case -420:
+        timezone = 'Asia/Bangkok';
+        break;
+      case -480:
+        timezone = 'Asia/Shanghai';
+        break;
+      case -510:
+        timezone ='Asia/Pyongyang';
+        break;
+      case -540:
+        timezone = 'Asia/Tokyo';
+        break;
+      case -570:
+        timezone ='Australia/Adelaide';
+        break;
+      case -600:
+        timezone = 'Australia/Brisbane';
+        break;
+      case -630:
+        timezone = 'Australia/Lord_Howe';
+        break;
+      case -660:
+        timezone = 'Pacific/Bougainville';
+        break;
+      case -720:
+        timezone = 'Asia/Kamchatka';
+        break;
+      case -765:
+        timezone = 'Pacific/Chatham';
+        break;
+      case -780:
+        timezone = 'Etc/GMT-13';
+        break;
+      case -840:
+        timezone = 'Pacific/Kiritimati';
+        break;
+      default:
+        timezone = 'Unknown';
+        break;
+    }
+    return timezone;
+  }
+
   /** On submit, insert the data. */
   submit(data) {
     const { title, location, startDate, endDate, priority, classification,
       version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
-    const longitude = navigator.geolocation.getCurrentPosition(this.longitudePosition);
-    const latitude = navigator.geolocation.getCurrentPosition(this.latitudePosition);
+    navigator.geolocation.getCurrentPosition((position) => 
+      this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));
+    let dataGeoLocal = this.state.geoLocal;
 
     let eventFile = `DTSTAMP:${this.createDTSTAMP(new Date())}\r\n`;
-    eventFile = eventFile.concat(`UID:placeholder\r\n`);
-    eventFile = eventFile.concat(`LOCATION:\r\n`);
-    eventFile = eventFile.concat(`CLASS:\r\n`);
-    eventFile = eventFile.concat(`SUMMARY:\r\n`);
-    eventFile = eventFile.concat(`TZID:\r\n`);
-    eventFile = eventFile.concat(`DTSTART: `);
-    eventFile = eventFile.concat(`ATTENDEE:\r\n`);
-    eventFile = eventFile.concat(`DTEND: `);
-    eventFile = eventFile.concat(`PRIORITY:\r\n`);
-    eventFile = eventFile.concat(`DESCRIPTION:\r\n`);
-    eventFile = eventFile.concat(`RESOURCES:\r\n`);
+    eventFile = eventFile.concat(`VERSION:${version}\r\n`);
+    eventFile = eventFile.concat(`UID:${new Date()}-${startDate}@example.com\r\n`);
+    eventFile = eventFile.concat(`LOCATION:${location}\r\n`);
+    eventFile = eventFile.concat(`CLASS:${classification}\r\n`);
+    eventFile = eventFile.concat(`SUMMARY:${title}\r\n`);
+    eventFile = eventFile.concat(`TZID:${this.createTZid(new Date())}\r\n`);
+    eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
+    eventFile = eventFile.concat(`DTSTART:${startDate}\r\n`);
+    eventFile = eventFile.concat(`DTEND:${endDate}\r\n`);
+    eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+    TRUE;CN=${guests};X-NUM-GUESTS=0:mailto:${guests}\r\n`);
+    eventFile = eventFile.concat(`PRIORITY:${priority}\r\n`);
+    eventFile = eventFile.concat(`DESCRIPTION:${description}\r\n`);
+    eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
+    eventFile = eventFile.concat(`OWNER:${owner}\r\n`);
 
     console.log(`BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`);
 
-    Events.insert({ title, location, startDate, endDate, latitude, longitude, priority,
+    let finalFile = `BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`;
+    let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blobFile, `${title}.ics`);
+
+    Events.insert({ title, location, startDate, endDate, dataGeoLocal, priority,
       classification, version, repeat, numOfEvents, description, resources, owner, guests }, this.insertCallback);
   }
 
@@ -119,11 +246,10 @@ class CreateEvent extends React.Component {
                 <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None" required/>
                 <SelectField name='classification'/>
                 <Form.Select name='version' options={versionOptions} label="Version" placeholder="vCalendar" required/>
-                <TextField name='latitude'/>
-                <TextField name='longitude'/>
                 <TextField name='resources'/>
                 <SubmitField value='Submit'/>
-                <HiddenField name='owner'/>
+                <HiddenField name='geoLocal' value='whatever'/>
+                <HiddenField name='owner' value='fakeuser@foo.com'/>
                 <ErrorsField/>
               </Segment>
             </AutoForm>
