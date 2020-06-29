@@ -1,6 +1,6 @@
 import React from 'react';
 import { Events, EventSchema } from '/imports/api/event/event';
-import { Grid, Segment, Header } from 'semantic-ui-react';
+import { Grid, Segment, Header, Form } from 'semantic-ui-react';
 import AutoForm from 'uniforms-semantic/AutoForm';
 import TextField from 'uniforms-semantic/TextField';
 import DateField from 'uniforms-semantic/DateField';
@@ -13,6 +13,15 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import { Meteor } from 'meteor/meteor';
 
 /** Renders the Page for adding a document. */
+const priorityOptions = [
+  { key: '0', text: 'None', value: '0' },
+  { key: '9', text: 'Low', value: '9' },
+  { key: '1', text: 'High', value: '1' },
+];
+const versionOptions = [
+  { key: '1.0', text: 'vCalendar', value: '1.0' },
+  { key: '2.0', text: 'iCalendar', value: '2.0' },
+];
 class CreateEvent extends React.Component {
 
   /** Bind 'this' so that a ref to the Form can be saved in formRef and communicated between render() and submit(). */
@@ -94,9 +103,9 @@ class CreateEvent extends React.Component {
                 <DateField name='endDate'/>
                 <TextField name='description'/>
                 <BoolField name='repeat'/>
-                <SelectField name='priority'/>
+                <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None"/>
                 <SelectField name='classification'/>
-                <SelectField name='version'/>
+                <Form.Select name='version' options={versionOptions} label="Version" placeholder="vCalendar"/>
                 <TextField name='resources'/>
                 <SubmitField value='Submit'/>
 
