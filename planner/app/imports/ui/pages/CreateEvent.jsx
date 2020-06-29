@@ -1,11 +1,11 @@
 import React from 'react';
 import { Events, EventSchema } from '/imports/api/event/event';
-import { Grid, Segment, Header, Form } from 'semantic-ui-react';
+import { Grid, Segment, Header, Form, Checkbox } from 'semantic-ui-react';
 import AutoForm from 'uniforms-semantic/AutoForm';
 import TextField from 'uniforms-semantic/TextField';
 import DateField from 'uniforms-semantic/DateField';
 import SelectField from 'uniforms-semantic/SelectField';
-import BoolField from 'uniforms-semantic/BoolField';
+import NumField from 'uniforms-semantic/NumField';
 import SubmitField from 'uniforms-semantic/SubmitField';
 import HiddenField from 'uniforms-semantic/HiddenField';
 import ErrorsField from 'uniforms-semantic/ErrorsField';
@@ -22,6 +22,13 @@ const versionOptions = [
   { key: '1.0', text: 'vCalendar', value: '1.0' },
   { key: '2.0', text: 'iCalendar', value: '2.0' },
 ];
+const repeatOptions = [
+  { key: 'NONE', text: 'None', value: 'NONE' },
+  { key: 'DAILY', text: 'Daily', value: 'DAILY' },
+  { key: 'WEEKLY', text: 'Weekly', value: 'WEEKLY' },
+  { key: 'MONTHLY', text: 'Monthly', value: 'MONTHLY' },
+  { key: 'YEARLY', text: 'Yearly', value: 'YEARLY' },
+];
 class CreateEvent extends React.Component {
 
   /** Bind 'this' so that a ref to the Form can be saved in formRef and communicated between render() and submit(). */
@@ -30,6 +37,9 @@ class CreateEvent extends React.Component {
     this.submit = this.submit.bind(this);
     this.insertCallback = this.insertCallback.bind(this);
     this.formRef = null;
+    this.state = {
+      repeatOption: false
+    }
   }
 
   /** Notify the user of the results of the submit. If successful, clear the form. */
@@ -90,6 +100,7 @@ class CreateEvent extends React.Component {
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
+    let repeatOption = false;
     return (
         <Grid container centered>
           <Grid.Column>
@@ -97,20 +108,21 @@ class CreateEvent extends React.Component {
             <AutoForm ref={(ref) => { this.formRef = ref; }} schema={EventSchema} onSubmit={this.submit}>
               <Segment>
                 <TextField name='title'/>
-                <TextField name='guests'/>
+                <TextField name='guests' placeholder="When inseting guests place a comma after each guest's emails"/>
                 <TextField name='location'/>
                 <DateField name='startDate'/>
                 <DateField name='endDate'/>
                 <TextField name='description'/>
-                <BoolField name='repeat'/>
-                <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None"/>
+               <Checkbox toggle label='Show Repeats' onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
+                {this.state.repeatOption && <Form.Select name='repeat' options={repeatOptions} label="Repeat" placeholder="None" />}
+                {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" placeholder="0" decimal={false} />}
+                <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None" required/>
                 <SelectField name='classification'/>
-                <Form.Select name='version' options={versionOptions} label="Version" placeholder="vCalendar"/>
+                <Form.Select name='version' options={versionOptions} label="Version" placeholder="vCalendar" required/>
+                <TextField name='latitude'/>
+                <TextField name='longitude'/>
                 <TextField name='resources'/>
                 <SubmitField value='Submit'/>
-
-                <HiddenField name='latitude'/>
-                <HiddenField name='longitude'/>
                 <HiddenField name='owner'/>
                 <ErrorsField/>
               </Segment>
