@@ -100,7 +100,6 @@ class CreateEvent extends React.Component {
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
-    let repeatOption = false;
     return (
         <Grid container centered>
           <Grid.Column>
@@ -113,7 +112,8 @@ class CreateEvent extends React.Component {
                 <DateField name='startDate'/>
                 <DateField name='endDate'/>
                 <TextField name='description'/>
-               <Checkbox toggle label='Show Repeats' onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
+               <Checkbox toggle label='Show Repeats' 
+                onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
                 {this.state.repeatOption && <Form.Select name='repeat' options={repeatOptions} label="Repeat" placeholder="None" />}
                 {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" placeholder="0" decimal={false} />}
                 <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None" required/>
