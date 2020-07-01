@@ -1,6 +1,6 @@
 import React from 'react';
 import { Events, EventSchema } from '/imports/api/event/event';
-import { Grid, Segment, Header, Form, Checkbox } from 'semantic-ui-react';
+import { Grid, Segment, Header, Form, Checkbox, Button } from 'semantic-ui-react';
 import AutoForm from 'uniforms-semantic/AutoForm';
 import TextField from 'uniforms-semantic/TextField';
 import DateField from 'uniforms-semantic/DateField';
@@ -40,7 +40,8 @@ class CreateEvent extends React.Component {
     this.state = {
       repeatOption: false,
       geoLocal: '',
-    }
+      displayGeoLocal: '',
+    };
   }
 
   /** Notify the user of the results of the submit. If successful, clear the form. */
@@ -53,7 +54,7 @@ class CreateEvent extends React.Component {
     }
   }
 
-  createDTSTAMP (date) {
+  createDTSTAMP(date) {
     let dt = `${date.getFullYear()}`;
     dt = dt.concat(("0" + (date.getMonth() + 1)).slice(-2));
     dt = dt.concat(("0" + date.getDate()).slice(-2));
@@ -64,10 +65,10 @@ class CreateEvent extends React.Component {
     return dt;
   }
 
-  createTZid (time){
-    let tzos= time.getTimezoneOffset();
+  createTZid(time) {
+    const tzos = time.getTimezoneOffset();
     let timezone = '';
-    switch (tzos){
+    switch (tzos) {
       case 720:
         timezone = 'Pacific/Kiritimati';
         break;
@@ -189,18 +190,32 @@ class CreateEvent extends React.Component {
     return timezone;
   }
 
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      this.setState({ displayGeoLocal: 'Geolocation is not supported by this browser.' });
+    }
+  }
+
+  showPosition(position) {
+    const temp =  'Latitude: ' + position.coords.latitude + ' Longitude: ' + position.coords.longitude;
+    this.setState({ displayGeoLocal: temp });
+    this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`});
+  }
+
   /** On submit, insert the data. */
   submit(data) {
     const { title, location, startDate, endDate, priority, classification,
       version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
-    navigator.geolocation.getCurrentPosition((position) => 
-      this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));
-    let dataGeoLocal = this.state.geoLocal;
-
+    const date = new Date();
+    const dtStamp = this.createDTSTAMP(date);
+    let temp = startDate + ' ';
+    console.log();  
     let eventFile = `DTSTAMP:${this.createDTSTAMP(new Date())}\r\n`;
     eventFile = eventFile.concat(`VERSION:${version}\r\n`);
-    eventFile = eventFile.concat(`UID:${new Date()}-${startDate}@example.com\r\n`);
+    eventFile = eventFile.concat(`UID:${dtStamp}-${temp.split(" ")[4].substring(3, 5)}@example.com\r\n`);
     eventFile = eventFile.concat(`LOCATION:${location}\r\n`);
     eventFile = eventFile.concat(`CLASS:${classification}\r\n`);
     eventFile = eventFile.concat(`SUMMARY:${title}\r\n`);
@@ -209,7 +224,7 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`DTSTART:${startDate}\r\n`);
     eventFile = eventFile.concat(`DTEND:${endDate}\r\n`);
     eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
-    TRUE;CN=${guests};X-NUM-GUESTS=0:mailto:${guests}\r\n`);
+    FALSE;CN=${guests};X-NUM-GUESTS=0:mailto:${guests}\r\n`);
     eventFile = eventFile.concat(`PRIORITY:${priority}\r\n`);
     eventFile = eventFile.concat(`DESCRIPTION:${description}\r\n`);
     eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
@@ -247,6 +262,8 @@ class CreateEvent extends React.Component {
                 <SelectField name='classification'/>
                 <Form.Select name='version' options={versionOptions} label="Version" placeholder="vCalendar" required/>
                 <TextField name='resources'/>
+                <Button onClick={() => this.getLocation()}>Display Geolocation Coordinates</Button>
+                <p>{this.state.displayGeoLocal}</p>
                 <SubmitField value='Submit'/>
                 <HiddenField name='geoLocal' value='whatever'/>
                 <HiddenField name='owner' value='fakeuser@foo.com'/>
