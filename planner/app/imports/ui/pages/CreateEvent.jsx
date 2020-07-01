@@ -41,6 +41,7 @@ class CreateEvent extends React.Component {
       repeatOption: false,
       geoLocal: '',
       displayGeoLocal: '',
+      priority: '',
     };
   }
 
@@ -209,10 +210,12 @@ class CreateEvent extends React.Component {
     const { title, location, startDate, endDate, priority, classification,
       version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
+    console.log(version);
+    console.log(this.state.priority);
+    
     const date = new Date();
     const dtStamp = this.createDTSTAMP(date);
-    let temp = startDate + ' ';
-    console.log();  
+    const temp = startDate + ' ';
     let eventFile = `DTSTAMP:${this.createDTSTAMP(new Date())}\r\n`;
     eventFile = eventFile.concat(`VERSION:${version}\r\n`);
     eventFile = eventFile.concat(`UID:${dtStamp}-${temp.split(" ")[4].substring(3, 5)}@example.com\r\n`);
@@ -231,7 +234,8 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`OWNER:${owner}\r\n`);
 
     console.log(`BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`);
-
+    
+    const dataGeoLocal = this.state.geoLocal;
     let finalFile = `BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`;
     let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blobFile, `${title}.ics`);
@@ -254,13 +258,14 @@ class CreateEvent extends React.Component {
                 <DateField name='startDate'/>
                 <DateField name='endDate'/>
                 <TextField name='description'/>
-               <Checkbox toggle label='Show Repeats' 
+               <Checkbox toggle label='Show Repeats'
                 onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
                 {this.state.repeatOption && <Form.Select name='repeat' options={repeatOptions} label="Repeat" placeholder="None" />}
                 {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" placeholder="0" decimal={false} />}
-                <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None" required/>
+                <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None" value={this.state.priority}
+                onChange={(value) => this.setState({ priority: value })} required/>
                 <SelectField name='classification'/>
-                <Form.Select name='version' options={versionOptions} label="Version" placeholder="vCalendar" required/>
+                <Form.Select name='version' options={versionOptions} label="Version" onChange={this.handleChange} placeholder="vCalendar" required/>
                 <TextField name='resources'/>
                 <Button onClick={() => this.getLocation()}>Display Geolocation Coordinates</Button>
                 <p>{this.state.displayGeoLocal}</p>
