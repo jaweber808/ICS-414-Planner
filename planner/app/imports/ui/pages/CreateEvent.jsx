@@ -243,7 +243,7 @@ class CreateEvent extends React.Component {
 
     console.log(`BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`);
     
-    let finalFile = `BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`;
+    let finalFile = `BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
     let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blobFile, `${title}.ics`);
 
