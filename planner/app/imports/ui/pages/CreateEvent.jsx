@@ -217,6 +217,8 @@ class CreateEvent extends React.Component {
     let dataGeoLocal = this.state.geoLocal;
     console.log(startDate);
     console.log(endDate);
+    startDate.setTime( startDate.getTime() + startDate.getTimezoneOffset()*60*1000 );
+    endDate.setTime( endDate.getTime() + endDate.getTimezoneOffset()*60*1000 );
     const date = new Date();
     const dtStamp = this.createDTSTAMP(date);
     const temp = startDate + ' ';
