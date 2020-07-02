@@ -11,6 +11,7 @@ import HiddenField from 'uniforms-semantic/HiddenField';
 import ErrorsField from 'uniforms-semantic/ErrorsField';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { Meteor } from 'meteor/meteor';
+import { saveAs } from 'file-saver';
 
 /** Renders the Page for adding a document. */
 const priorityOptions = [
@@ -239,7 +240,7 @@ class CreateEvent extends React.Component {
 
     console.log(`BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`);
     
-    let finalFile = `BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`;
+    let finalFile = `BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
     let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blobFile, `${title}.ics`);
 
