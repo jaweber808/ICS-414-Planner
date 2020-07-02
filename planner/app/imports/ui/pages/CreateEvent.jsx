@@ -212,30 +212,33 @@ class CreateEvent extends React.Component {
     const owner = Meteor.user().username;
     console.log(version);
     console.log(this.state.priority);
-    
+    navigator.geolocation.getCurrentPosition((position) => 	    
+    this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));	 
+    let dataGeoLocal = this.state.geoLocal;
     const date = new Date();
     const dtStamp = this.createDTSTAMP(date);
     const temp = startDate + ' ';
-    let eventFile = `DTSTAMP:${this.createDTSTAMP(new Date())}\r\n`;
-    eventFile = eventFile.concat(`VERSION:${version}\r\n`);
+    let eventFile = `VERSION:${version}.0\r\n`;
+    eventFile = eventFile.concat(`CALSCALE:GREGORIAN\r\n`);
+    eventFile = eventFile.concat(`BEGIN:VEVENT\r\n`);
+    eventFile = eventFile.concat(`DTSTAMP:${this.createDTSTAMP(new Date())}\r\n`);
     eventFile = eventFile.concat(`UID:${dtStamp}-${temp.split(" ")[4].substring(3, 5)}@example.com\r\n`);
     eventFile = eventFile.concat(`LOCATION:${location}\r\n`);
     eventFile = eventFile.concat(`CLASS:${classification}\r\n`);
     eventFile = eventFile.concat(`SUMMARY:${title}\r\n`);
     eventFile = eventFile.concat(`TZID:${this.createTZid(new Date())}\r\n`);
-    eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
-    eventFile = eventFile.concat(`DTSTART:${startDate}\r\n`);
-    eventFile = eventFile.concat(`DTEND:${endDate}\r\n`);
-    eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
-    FALSE;CN=${guests};X-NUM-GUESTS=0:mailto:${guests}\r\n`);
+    eventFile = eventFile.concat(`DTSTART:${this.createDTSTAMP(startDate)}\r\n`);
+    eventFile = eventFile.concat(`DTEND:${this.createDTSTAMP(endDate)}\r\n`);
     eventFile = eventFile.concat(`PRIORITY:${priority}\r\n`);
     eventFile = eventFile.concat(`DESCRIPTION:${description}\r\n`);
     eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
-    eventFile = eventFile.concat(`OWNER:${owner}\r\n`);
+    // eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
+    eventFile = eventFile.concat(`ORGANIZER;CN=${owner}:mailto:${owner}\r\n`);
+    eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=${guests};X-NUM-GUESTS=0:mailto:${guests}\r\n`);
+    eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE;CN=${owner};X-NUM-GUESTS=0:mailto:${owner}\r\n`);
 
-    console.log(`BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`);
+    console.log(`BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`);
     
-    const dataGeoLocal = this.state.geoLocal;
     let finalFile = `BEGIN:VEVENT\r\n${eventFile}END:VEVENT\r\n`;
     let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blobFile, `${title}.ics`);
@@ -262,10 +265,9 @@ class CreateEvent extends React.Component {
                 onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
                 {this.state.repeatOption && <Form.Select name='repeat' options={repeatOptions} label="Repeat" placeholder="None" />}
                 {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" placeholder="0" decimal={false} />}
-                <Form.Select name='priority' options={priorityOptions} label="Priority" placeholder="None" value={this.state.priority}
-                onChange={(value) => this.setState({ priority: value })} required/>
+                <SelectField name='priority'/>
                 <SelectField name='classification'/>
-                <Form.Select name='version' options={versionOptions} label="Version" onChange={this.handleChange} placeholder="vCalendar" required/>
+                <SelectField name='version'/>
                 <TextField name='resources'/>
                 <Button onClick={() => this.getLocation()}>Display Geolocation Coordinates</Button>
                 <p>{this.state.displayGeoLocal}</p>
