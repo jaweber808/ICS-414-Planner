@@ -215,6 +215,8 @@ class CreateEvent extends React.Component {
     navigator.geolocation.getCurrentPosition((position) => 	    
     this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));	 
     let dataGeoLocal = this.state.geoLocal;
+    console.log(startDate);
+    console.log(endDate);
     const date = new Date();
     const dtStamp = this.createDTSTAMP(date);
     const temp = startDate + ' ';
