@@ -233,6 +233,13 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`SUMMARY:${title}\r\n`);
     eventFile = eventFile.concat(`TZID:${this.createTZid(new Date())}\r\n`);
     eventFile = eventFile.concat(`DTSTART:${this.createDTSTAMP(startDate)}\r\n`);
+    if (repeat !== 'NONE') {
+      eventFile = eventFile.concat(`RRULE:FREQ=${repeat}`);
+      if (numOfEvents > 0) {
+        eventFile = eventFile.concat(`;COUNT=${numOfEvents}`);
+      }
+      eventFile = eventFile.concat(`\r\n`);
+    }
     eventFile = eventFile.concat(`DTEND:${this.createDTSTAMP(endDate)}\r\n`);
     eventFile = eventFile.concat(`PRIORITY:${priority}\r\n`);
     eventFile = eventFile.concat(`DESCRIPTION:${description}\r\n`);
@@ -268,8 +275,8 @@ class CreateEvent extends React.Component {
                 <TextField name='description'/>
                <Checkbox toggle label='Show Repeats'
                 onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
-                {this.state.repeatOption && <Form.Select name='repeat' options={repeatOptions} label="Repeat" placeholder="None" />}
-                {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" placeholder="0" decimal={false} />}
+                {this.state.repeatOption && <SelectField name='repeat' label="Repeat" default="NONE" />}
+                {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" min='0' default="0" decimal={false} />}
                 <SelectField name='priority'/>
                 <SelectField name='classification'/>
                 <SelectField name='version'/>
