@@ -36,8 +36,12 @@ const EventSchema = new SimpleSchema({
   description: String,
   resources: String,
   owner: String,
-  guests: Array,
-  'guests.$': String,
+  guests: String,
+  guestEmails: Array,
+  'guestEmails.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.EmailWithTLD,
+  },
 }, { tracker: Tracker });
 
 /** Attach this schema to the collection. */

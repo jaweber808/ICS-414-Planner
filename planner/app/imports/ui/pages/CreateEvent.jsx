@@ -1,6 +1,6 @@
 import React from 'react';
 import { Events, EventSchema } from '/imports/api/event/event';
-import { Grid, Segment, Header, Form, Checkbox, Button } from 'semantic-ui-react';
+import { Grid, Segment, Header, Form, Checkbox, Button, FormDropdown } from 'semantic-ui-react';
 import AutoForm from 'uniforms-semantic/AutoForm';
 import TextField from 'uniforms-semantic/TextField';
 import DateField from 'uniforms-semantic/DateField';
@@ -211,6 +211,7 @@ class CreateEvent extends React.Component {
     const { title, location, startDate, endDate, priority, classification,
       version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
+    const guestEmails = guests.split(',');
     console.log(version);
     console.log(this.state.priority);
     navigator.geolocation.getCurrentPosition((position) => 	    
@@ -246,7 +247,7 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
     // eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
     eventFile = eventFile.concat(`ORGANIZER;CN=${owner}:mailto:${owner}\r\n`);
-    const guestEmails = guests.split(',');
+    console.log(guestEmails);
     guestEmails.forEach(guest => {
       eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=${guest.trim()};X-NUM-GUESTS=0:mailto:${guest.trim()}\r\n`);
     });
@@ -259,7 +260,7 @@ class CreateEvent extends React.Component {
     saveAs(blobFile, `${title}.ics`);
 
     Events.insert({ title, location, startDate, endDate, dataGeoLocal, priority,
-      classification, version, repeat, numOfEvents, description, resources, owner, guests }, this.insertCallback);
+      classification, version, repeat, numOfEvents, description, resources, owner, guests, guestEmails }, this.insertCallback);
   }
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
@@ -289,6 +290,7 @@ class CreateEvent extends React.Component {
                 <SubmitField value='Submit'/>
                 <HiddenField name='geoLocal' value='whatever'/>
                 <HiddenField name='owner' value='fakeuser@foo.com'/>
+                <HiddenField name='guestEmails' value='["admin@foo.com"]'/>
                 <ErrorsField/>
               </Segment>
             </AutoForm>
