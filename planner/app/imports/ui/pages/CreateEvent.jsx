@@ -246,7 +246,10 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
     // eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
     eventFile = eventFile.concat(`ORGANIZER;CN=${owner}:mailto:${owner}\r\n`);
-    eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=${guests};X-NUM-GUESTS=0:mailto:${guests}\r\n`);
+    const guestEmails = guests.split(',');
+    guestEmails.forEach(guest => {
+      eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=${guest.trim()};X-NUM-GUESTS=0:mailto:${guest.trim()}\r\n`);
+    });
     eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE;CN=${owner};X-NUM-GUESTS=0:mailto:${owner}\r\n`);
 
     console.log(`BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`);
