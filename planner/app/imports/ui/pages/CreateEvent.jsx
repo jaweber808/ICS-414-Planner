@@ -212,13 +212,9 @@ class CreateEvent extends React.Component {
       version, repeat, numOfEvents, description, resources, guests } = data;
     const owner = Meteor.user().username;
     const guestEmails = guests.split(',');
-    console.log(version);
-    console.log(this.state.priority);
     navigator.geolocation.getCurrentPosition((position) => 	    
     this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));	 
     let dataGeoLocal = this.state.geoLocal;
-    console.log(startDate);
-    console.log(endDate);
     startDate.setTime( startDate.getTime() + startDate.getTimezoneOffset()*60*1000 );
     endDate.setTime( endDate.getTime() + endDate.getTimezoneOffset()*60*1000 );
     const date = new Date();
@@ -247,7 +243,6 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
     // eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
     eventFile = eventFile.concat(`ORGANIZER;CN=${owner}:mailto:${owner}\r\n`);
-    console.log(guestEmails);
     guestEmails.forEach(guest => {
       eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=${guest.trim()};X-NUM-GUESTS=0:mailto:${guest.trim()}\r\n`);
     });

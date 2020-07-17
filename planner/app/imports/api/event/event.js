@@ -9,7 +9,14 @@ const Events = new Mongo.Collection('Events');
 const EventSchema = new SimpleSchema({
   title: String,
   location: String,
-  startDate: Date,
+  startDate: {
+    type: Date,
+    custom() {
+      if(this.value < new Date()) {
+        return SimpleSchema.ErrorTypes.BAD_DATE;
+      }
+    }
+  },
   endDate: {
     type: Date,
     custom() {
