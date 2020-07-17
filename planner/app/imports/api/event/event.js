@@ -10,7 +10,14 @@ const EventSchema = new SimpleSchema({
   title: String,
   location: String,
   startDate: Date,
-  endDate: Date,
+  endDate: {
+    type: Date,
+    custom() {
+      if(this.value <= this.field('startDate').value) {
+        return SimpleSchema.ErrorTypes.BAD_DATE;
+      }
+    }
+  },
   geoLocal: String,
   priority: {
     type: Number,
@@ -40,7 +47,7 @@ const EventSchema = new SimpleSchema({
   guestEmails: Array,
   'guestEmails.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.EmailWithTLD,
+    // regEx: SimpleSchema.RegEx.EmailWithTLD,
   },
 }, { tracker: Tracker });
 
