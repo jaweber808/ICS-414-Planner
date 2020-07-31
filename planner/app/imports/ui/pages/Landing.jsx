@@ -12,8 +12,8 @@ class Landing extends React.Component {
           </Grid.Column>
 
           <Grid.Column width={8}>
-            <h1>Welcome to this template</h1>
-            <p>Now get to work and modify this app!</p>
+            <h1>Event File Creator</h1>
+            <p>Provides a form to create an .ics file to be used in Google Calendar to generate events.</p>
           </Grid.Column>
 
         </Grid>

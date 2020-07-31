@@ -214,7 +214,7 @@ class CreateEvent extends React.Component {
     const guestEmails = guests.split(',');
     navigator.geolocation.getCurrentPosition((position) => 	    
     this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));	 
-    let dataGeoLocal = this.state.geoLocal;
+    let geoLocal = this.state.geoLocal;
     startDate.setTime( startDate.getTime() + startDate.getTimezoneOffset()*60*1000 );
     endDate.setTime( endDate.getTime() + endDate.getTimezoneOffset()*60*1000 );
     const date = new Date();
@@ -255,7 +255,7 @@ class CreateEvent extends React.Component {
     let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blobFile, `${title}.ics`);
 
-    Events.insert({ title, location, startDate, endDate, dataGeoLocal, priority,
+    Events.insert({ title, location, startDate, endDate, geoLocal, priority,
       classification, version, repeat, numOfEvents, description, resources, owner, guests, guestEmails }, this.insertCallback);
   }
 
@@ -266,22 +266,42 @@ class CreateEvent extends React.Component {
           <Grid.Column>
             <Header as="h2" textAlign="center">Create Event</Header>
             <Button onClick={() => this.getLocation()}>Display Geolocation Coordinates</Button>
-            <p>{this.state.geoLocal}</p>
+                <p>{this.state.geoLocal}</p>
             <AutoForm ref={(ref) => { this.formRef = ref; }} schema={EventSchema} onSubmit={this.submit}>
               <Segment>
                 <TextField name='title'/>
                 <TextField name='guests' placeholder="When inseting guests place a comma after each guest's emails"/>
                 <TextField name='location'/>
-                <DateField name='startDate'/>
-                <DateField name='endDate'/>
+                <div class="two fields">
+                  <div class="field">
+                    <DateField name='startDate'/>
+                  </div>
+                  <div class="field">
+                    <DateField name='endDate'/>
+                  </div>
+                </div>
                 <TextField name='description'/>
-               <Checkbox toggle label='Show Repeats'
-                onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/>
-                {this.state.repeatOption && <SelectField name='repeat' label="Repeat" default="NONE" />}
-                {this.state.repeatOption && <NumField name='numOfEvents' label="Number of times per repeat" min='0' default="0" decimal={false} />}
-                <SelectField name='priority'/>
-                <SelectField name='classification'/>
-                <SelectField name='version'/>
+               {/* <Checkbox toggle label='Show Repeats'
+                onChange={() => this.state.repeatOption ? this.setState({repeatOption: false}) :  this.setState({repeatOption: true})}/> */}
+                <div class="two fields">
+                  <div class="field">
+                    <SelectField name='repeat' label="Repeat" default="NONE" />
+                  </div>
+                  <div class="field">
+                    <NumField name='numOfEvents' label="Number of times per repeat" min='0' default="0" value="0" decimal={false} />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="field">
+                    <SelectField name='priority'/>
+                  </div>
+                  <div class="field">
+                    <SelectField name='classification'/>
+                  </div>
+                  <div class="field">
+                    <SelectField name='version'/>
+                  </div>
+                </div>
                 <TextField name='resources'/>
                 <SubmitField value='Submit'/>
                 <HiddenField name='geoLocal' value='whatever'/>
