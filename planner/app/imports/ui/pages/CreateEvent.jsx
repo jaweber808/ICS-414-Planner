@@ -194,7 +194,7 @@ class CreateEvent extends React.Component {
 
   getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
+      navigator.geolocation.getCurrentPosition((position) => this.setState({geoLocal: `${position.coords.longitude};${position.coords.latitude}`}));
     } else {
       this.setState({ displayGeoLocal: 'Geolocation is not supported by this browser.' });
     }
@@ -241,7 +241,8 @@ class CreateEvent extends React.Component {
     eventFile = eventFile.concat(`PRIORITY:${priority}\r\n`);
     eventFile = eventFile.concat(`DESCRIPTION:${description}\r\n`);
     eventFile = eventFile.concat(`RESOURCES:${resources}\r\n`);
-    // eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
+    if (this.state.geoLocal != '')
+      eventFile = eventFile.concat(`GEO:${this.state.geoLocal}\r\n`);
     eventFile = eventFile.concat(`ORGANIZER;CN=${owner}:mailto:${owner}\r\n`);
     guestEmails.forEach(guest => {
       eventFile = eventFile.concat(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=${guest.trim()};X-NUM-GUESTS=0:mailto:${guest.trim()}\r\n`);
@@ -264,6 +265,8 @@ class CreateEvent extends React.Component {
         <Grid container centered>
           <Grid.Column>
             <Header as="h2" textAlign="center">Create Event</Header>
+            <Button onClick={() => this.getLocation()}>Display Geolocation Coordinates</Button>
+            <p>{this.state.geoLocal}</p>
             <AutoForm ref={(ref) => { this.formRef = ref; }} schema={EventSchema} onSubmit={this.submit}>
               <Segment>
                 <TextField name='title'/>
@@ -280,8 +283,6 @@ class CreateEvent extends React.Component {
                 <SelectField name='classification'/>
                 <SelectField name='version'/>
                 <TextField name='resources'/>
-                <Button onClick={() => this.getLocation()}>Display Geolocation Coordinates</Button>
-                <p>{this.state.displayGeoLocal}</p>
                 <SubmitField value='Submit'/>
                 <HiddenField name='geoLocal' value='whatever'/>
                 <HiddenField name='owner' value='fakeuser@foo.com'/>
