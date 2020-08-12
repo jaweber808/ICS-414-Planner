@@ -254,9 +254,6 @@ class CreateEvent extends React.Component {
     let finalFile = `BEGIN:VCALENDAR\r\n${eventFile}STATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
     let blobFile = new Blob([finalFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blobFile, `${title}.ics`);
-
-    Events.insert({ title, location, startDate, endDate, geoLocal, priority,
-      classification, version, repeat, numOfEvents, description, resources, owner, guests, guestEmails }, this.insertCallback);
   }
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
