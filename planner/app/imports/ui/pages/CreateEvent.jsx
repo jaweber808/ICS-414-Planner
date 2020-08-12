@@ -288,7 +288,7 @@ class CreateEvent extends React.Component {
                     <SelectField name='repeat' label="Repeat" default="NONE" />
                   </div>
                   <div class="field">
-                    <NumField name='numOfEvents' label="Number of times per repeat" min='0' default="0" value="0" decimal={false} />
+                    <NumField name='numOfEvents' label="Number of times per repeat" min='0' default="0" decimal={false} />
                   </div>
                 </div>
                 <div class="three fields">
